@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { API_URL_PATH, API_URL_REGISTER_SUFIX, REACT_LOGIN_PATH } from '../Util/Constants';
+import { API_URL_PATH, API_URL_REGISTER_SUFIX, REACT_LOGIN_PATH, REACT_DASHBOARD_PATH } from '../Util/Constants';
 import { CustomLink } from '../CustomLink/CustomLink';
-import { Container, Form, FormControl, Button, Alert } from 'react-bootstrap';
+import { Container, Form, FormControl, Button, Alert, Row, Col } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
+import './Register.css';
+import getToken from '../App/getToken';
 
 async function registerCourier(credentials) {
     return fetch(API_URL_PATH+API_URL_REGISTER_SUFIX, {
@@ -61,6 +64,8 @@ export default function Register() {
     const [ password, setPassword ] = useState();
     const [ repassword, setRepassword ] = useState();
     const [ licence, setLicence ] = useState();
+    const [ token ] = useState(getToken().token);
+    const [ registered, setRegistered ] = useState(false);
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -73,40 +78,71 @@ export default function Register() {
             repassword,
             licence
         })) {
-            const response = await registerCourier({
+            registerCourier({
                 firstname,
                 lastname,
                 login,
                 email,
                 password,
                 licence
-            });
-            if (response.success) {
-                setMessage('You were registered successfuly');
-            } else {
-                setMessage(response.message);
-            }
+            })
+            .then((response) => {
+                if (response.success) {
+                    setMessage('You were registered successfuly');
+                    setRegistered(true);
+                } else {
+                    setMessage(response.message);
+                }
+            })
         }
         else {
             setMessage('The provided credentials are invalid');
         }
     }
 
+    if (token)  {
+        return (
+            <Redirect to={{
+                pathname : REACT_DASHBOARD_PATH,
+                state : { message : "You are already logged in" }
+            }} />
+        );
+    }
+
+    if (registered) {
+        return (
+            <Redirect to={{
+                pathname : REACT_LOGIN_PATH,
+                state : { message : "You have been registered"}
+            }} />
+        );
+    }
+
     return(
-        <Container>
-            <h2>Register</h2>
-            <Form onSubmit={handleSubmit}>
-                <FormControl onChange={e => setFirstname(e.target.value)} value={firstname} placeholder="First Name" type="text" />
-                <FormControl onChange={e => setLastname(e.target.value)} value={lastname} placeholder="Last Name" type="text" />
-                <FormControl onChange={e => setLogin(e.target.value)} value={login} placeholder="Username" type="text" />
-                <FormControl onChange={e => setEmail(e.target.value)} value={email} placeholder="Email" type="email" />
-                <FormControl onChange={e => setLicence(e.target.value)} value={licence} placeholder="Licence Number" type="text" />
-                <FormControl onChange={e => setPassword(e.target.value)} value={password} placeholder="Password" type="password" />
-                <FormControl onChange={e => setRepassword(e.target.value)} value={repassword} placeholder="Confirm Password" type="password" />
-                <Button as="input" type="submit" value="Submit" />
-            </Form>
-            <CustomLink to={REACT_LOGIN_PATH} text="You already have an account? Log in now!" />
-        { message && <Alert variant="danger">{message}</Alert>}
+        <Container fluid="true">
+            <Row className="text-center page-title">
+                <h2>Register</h2>
+            </Row>
+            <Row className="text-center">
+                <Col md={{span : 4}}>
+                    <Form onSubmit={handleSubmit}>
+                        <FormControl onChange={e => setFirstname(e.target.value)} placeholder="First Name" type="text" className="input-form" />
+                        <FormControl onChange={e => setLastname(e.target.value)} placeholder="Last Name" type="text" className="input-form" />
+                        <FormControl onChange={e => setLogin(e.target.value)} placeholder="Username" type="text" className="input-form" />
+                        <FormControl onChange={e => setEmail(e.target.value)} placeholder="Email" type="email" className="input-form" />
+                        <FormControl onChange={e => setLicence(e.target.value)} placeholder="Licence Number" type="text" className="input-form" />
+                        <FormControl onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" className="input-form" />
+                        <FormControl onChange={e => setRepassword(e.target.value)} placeholder="Confirm Password" type="password" className="input-form" />
+                        <Button as="input" type="submit" value="Submit" />
+                        <CustomLink to={REACT_LOGIN_PATH} text="You already have an account? Log in now!" />
+                    </Form>
+                </Col>
+            </Row>
+            <Row className="text-center">
+                <Col md={{ span : 4}}>
+                    {message && <Alert variant="danger">{message}</Alert>}
+                </Col>
+            </Row>
         </Container>
     );
 }

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import {CustomLink} from '../CustomLink/CustomLink';
 import './Login.css';
-import { API_URL_PATH, API_URL_LOGIN_SUFIX } from '../Util/Constants';
-import { Container, Form, FormControl, Button, Alert } from 'react-bootstrap';
+import { API_URL_PATH, API_URL_LOGIN_SUFIX, REACT_DASHBOARD_PATH } from '../Util/Constants';
+import { Container, Form, FormControl, Button, Alert, Row, Col } from 'react-bootstrap';
+import getToken from '../App/getToken';
 
 async function loginCourier(credentials) {
     return fetch(API_URL_PATH+API_URL_LOGIN_SUFIX, {
@@ -22,35 +24,62 @@ async function loginCourier(credentials) {
         })
 }
 
-export default function Login({setToken}) {
+export default function Login(props) {
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
     const [message, setMessage ] = useState();
+    const [token, setToken ] = useState(getToken().token);
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const response = await loginCourier({
+        loginCourier({
             login,
             password
         })
-        if( response.success ){
-            setToken(response.message);
-            
-        } else {
-            setMessage(response.message);
+        .then( (response) => {
+            if( response.success ){
+                localStorage.setItem("token", response.message);
+                localStorage.setItem("user", login);
+                setToken(response.message);
+            } else {
+                setMessage(response.message);
+            }
         }
+        );
+    }
+
+    if (token) {
+        return <Redirect to={{
+            pathname : REACT_DASHBOARD_PATH,
+            state : { message : "You have been logged in"}
+        }} />
     }
 
     return(
-        <Container>
-             <h2>Login</h2>
-            <Form onSubmit={handleSubmit}>
-                <FormControl onChange={e => setLogin(e.target.value)} value={login} placeholder="Username" type="text" />
-                <FormControl onChange={e => setPassword(e.target.value)} value={password} placeholder="Password" type="password"/> 
-                <Button as="input" type="submit" value="Submit" />
-            <CustomLink to="/register" text="Don't have an account? Register now!"/>
-            </Form>
-            {message && <Alert variant="danger">{message}</Alert>}
+        <Container fluid="true">
+            <Row className="text-center page-title">
+                <h2>Login</h2>
+            </Row>
+            <Row className="text-center">
+                <Col md={{ span : 4}}>
+                    {props.location && props.location.state && props.location.state.message && <Alert variant="warning">{props.location.state.message}</Alert>}
+                </Col>
+            </Row>
+            <Row className="text-center">
+                <Col md={{span : 4}}>
+                    <Form onSubmit={handleSubmit}>
+                        <FormControl onChange={e => setLogin(e.target.value)} placeholder="Username" type="text" className="input-form"/>
+                        <FormControl onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" className="input-form"/> 
+                        <Button as="input" type="submit" value="Submit" />
+                        <CustomLink to="/register" text="Don't have an account? Register now!"/>
+                    </Form>
+                </Col>
+            </Row>
+            <Row className="text-center">
+                <Col md={{ span : 4}}>
+                    {message && <Alert variant="danger">{message}</Alert>}
+                </Col>
+            </Row>
         </Container>
     )
 }
