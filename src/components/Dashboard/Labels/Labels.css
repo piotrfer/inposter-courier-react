@@ -1,0 +1,12 @@
+.scrollable-list {
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+.text-center {
+    justify-content: center ;
+}
+
+.label-list {
+    list-style: none;
+}

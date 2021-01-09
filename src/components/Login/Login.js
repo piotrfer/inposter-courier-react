@@ -17,9 +17,9 @@ async function loginCourier(credentials) {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                return { success: false, message: data.error}
+                return { success: false, message: data.error};
             } else {
-                return { success: true, message: data.token}
+                return { success: true, message: data.token};
             }
         })
 }

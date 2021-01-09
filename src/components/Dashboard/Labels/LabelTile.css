@@ -1,0 +1,17 @@
+.label-card {
+    margin: 1vh;
+    background-color: lightgoldenrodyellow;
+}
+
+.label-text {
+    margin-bottom: 0.2vh;
+}
+
+.generate-button {
+    width: 100%;
+    margin: 0;
+}
+
+.label-footer {
+    padding: 0 !important;
+}
