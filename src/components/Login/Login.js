@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import {CustomLink} from '../CustomLink/CustomLink';
 import './Login.css';
+import { API_URL_PATH, API_URL_LOGIN_SUFIX } from '../Util/Constants';
+import { Container, Form, FormControl, Button, Alert } from 'react-bootstrap';
 
 async function loginCourier(credentials) {
-    return fetch('http://localhost:8000/courier/login', {
+    return fetch(API_URL_PATH+API_URL_LOGIN_SUFIX, {
         method : 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -12,10 +14,10 @@ async function loginCourier(credentials) {
     })
         .then(response => response.json())
         .then(data => {
-            if(data.token) {
-                return { status: 200, data: data.token};
+            if (data.error) {
+                return { success: false, message: data.error}
             } else {
-                return { status: 400, data: data.error};
+                return { success: true, message: data.token}
             }
         })
 }
@@ -27,39 +29,28 @@ export default function Login({setToken}) {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const tokenString = await loginCourier({
+        const response = await loginCourier({
             login,
             password
         })
-        if( tokenString.status === 200 ){
-            setToken(tokenString.data);
-            setMessage('');
+        if( response.success ){
+            setToken(response.message);
+            
         } else {
-            setMessage(tokenString.data);
+            setMessage(response.message);
         }
     }
 
     return(
-        <div>
-        <h2>Login</h2>
-        <p>{message}</p>
-        <form onSubmit={handleSubmit}>
-            <label>
-                <p>Username</p>
-                <input type="text" onChange={e => setLogin(e.target.value)}/>
-            </label>
-            <label>
-                <p>Password</p>
-                <input type="password" onChange={e => setPassword(e.target.value)} />
-            </label>
-            <div>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-        </div>
+        <Container>
+             <h2>Login</h2>
+            <Form onSubmit={handleSubmit}>
+                <FormControl onChange={e => setLogin(e.target.value)} value={login} placeholder="Username" type="text" />
+                <FormControl onChange={e => setPassword(e.target.value)} value={password} placeholder="Password" type="password"/> 
+                <Button as="input" type="submit" value="Submit" />
+            <CustomLink to="/register" text="Don't have an account? Register now!"/>
+            </Form>
+            {message && <Alert variant="danger">{message}</Alert>}
+        </Container>
     )
-}
-
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
 }

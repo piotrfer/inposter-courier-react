@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { API_URL_PATH, API_URL_REGISTER_SUFIX, REACT_LOGIN_PATH } from '../Util/Constants';
+import { CustomLink } from '../CustomLink/CustomLink';
+import { Container, Form, FormControl, Button, Alert } from 'react-bootstrap';
 
 async function registerCourier(credentials) {
-    return fetch('http://localhost:8000/courier/signup', {
+    return fetch(API_URL_PATH+API_URL_REGISTER_SUFIX, {
         method : 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -67,6 +70,7 @@ export default function Register() {
             login,
             email,
             password,
+            repassword,
             licence
         })) {
             const response = await registerCourier({
@@ -89,42 +93,20 @@ export default function Register() {
     }
 
     return(
-        <div>
+        <Container>
             <h2>Register</h2>
-            <p>{message}</p>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <p>First name</p>
-                    <input type="text" onChange={e => setFirstname(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Last name</p>
-                    <input type="text" onChange={e => setLastname(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Username</p>
-                    <input type="text" onChange={e => setLogin(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Email</p>
-                    <input type="email" onChange={e => setEmail(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Password</p>
-                    <input type="password" onChange={e => setPassword(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Confirm password</p>
-                    <input type="password" onChange={e => setRepassword(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Licence</p>
-                    <input type="licence" onChange={e => setLicence(e.target.value)}/>
-                </label>
-                <div>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
-    )
+            <Form onSubmit={handleSubmit}>
+                <FormControl onChange={e => setFirstname(e.target.value)} value={firstname} placeholder="First Name" type="text" />
+                <FormControl onChange={e => setLastname(e.target.value)} value={lastname} placeholder="Last Name" type="text" />
+                <FormControl onChange={e => setLogin(e.target.value)} value={login} placeholder="Username" type="text" />
+                <FormControl onChange={e => setEmail(e.target.value)} value={email} placeholder="Email" type="email" />
+                <FormControl onChange={e => setLicence(e.target.value)} value={licence} placeholder="Licence Number" type="text" />
+                <FormControl onChange={e => setPassword(e.target.value)} value={password} placeholder="Password" type="password" />
+                <FormControl onChange={e => setRepassword(e.target.value)} value={repassword} placeholder="Confirm Password" type="password" />
+                <Button as="input" type="submit" value="Submit" />
+            </Form>
+            <CustomLink to={REACT_LOGIN_PATH} text="You already have an account? Log in now!" />
+        { message && <Alert variant="danger">{message}</Alert>}
+        </Container>
+    );
 }
