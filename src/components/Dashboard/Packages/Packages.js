@@ -35,7 +35,7 @@ function convertToArray(packages) {
 
 
 
-export default function Packages() {
+export default function Packages(props) {
     
     const [ token ] = useState(getToken().token);
     const [ message, setMessage ] = useState();
@@ -50,12 +50,15 @@ export default function Packages() {
                     setMessage(response.message);
                 }                    
             })
+        props.setRefresh(false);
     }
 
 
     useEffect( () => {
-        refreshPackages();
-    }, [token])
+        if (props.refresh) {
+            refreshPackages();
+        }
+    })
 
     return (
         <Container fluid="true">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import getToken from '../App/getToken';
 import { REACT_LOGIN_PATH } from '../Util/Constants';
@@ -9,6 +9,8 @@ import { Row, Col } from 'react-bootstrap';
 export default function Dashboard() {
 
     const token = getToken().token;
+    const [ packageRefresh, setPackageRefresh ] = useState(true);
+    const [ labelRefresh, setLabelRefresh ] = useState(true);
 
     if (!token) {
         return (
@@ -20,7 +22,7 @@ export default function Dashboard() {
     }
 
     const handleRefresh = () => {
-        console.log("refresh!");
+        setPackageRefresh(true);
     }
 
     return (
@@ -33,7 +35,7 @@ export default function Dashboard() {
             </Row>
             <Row className="text-center">
                 <Col md={{ span : 6 }}>
-                    <Labels onRefresh={handleRefresh} />
+                    <Labels onRefresh={handleRefresh} refresh={labelRefresh} setRefresh={setLabelRefresh}/>
                 </Col>
             </Row>
             <Row>
@@ -43,7 +45,7 @@ export default function Dashboard() {
             </Row>
             <Row className="text-center">
                 <Col md={{ span : 6 }}>
-                    <Packages/>
+                    <Packages refresh={packageRefresh} setRefresh={setPackageRefresh} />
                 </Col>
             </Row>
         </>

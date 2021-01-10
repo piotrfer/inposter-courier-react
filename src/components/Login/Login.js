@@ -4,7 +4,6 @@ import {CustomLink} from '../CustomLink/CustomLink';
 import './Login.css';
 import { API_URL_PATH, API_URL_LOGIN_SUFIX, REACT_DASHBOARD_PATH } from '../Util/Constants';
 import { Container, Form, FormControl, Button, Alert, Row, Col } from 'react-bootstrap';
-import getToken from '../App/getToken';
 
 async function loginCourier(credentials) {
     return fetch(API_URL_PATH+API_URL_LOGIN_SUFIX, {
@@ -28,7 +27,6 @@ export default function Login(props) {
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
     const [message, setMessage ] = useState();
-    const [token, setToken ] = useState(getToken().token);
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -40,7 +38,7 @@ export default function Login(props) {
             if( response.success ){
                 localStorage.setItem("token", response.message);
                 localStorage.setItem("user", login);
-                setToken(response.message);
+                props.setToken(response.message);
             } else {
                 setMessage(response.message);
             }
@@ -48,7 +46,7 @@ export default function Login(props) {
         );
     }
 
-    if (token) {
+    if (props.token) {
         return <Redirect to={{
             pathname : REACT_DASHBOARD_PATH,
             state : { message : "You have been logged in"}

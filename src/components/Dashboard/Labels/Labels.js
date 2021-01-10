@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Alert } from 'react-bootstrap';
 import { API_URL_LABELS_SUFIX, API_URL_PATH } from '../../Util/Constants';
 import './Labels.css';
@@ -40,6 +40,7 @@ export default function Labels(props) {
                     setMessage(response.message);
                 }
             })
+        props.setRefresh(false);
     }
 
     const handleRefresh = () => {
@@ -59,8 +60,10 @@ export default function Labels(props) {
 
 
     useEffect( () => {
-        refreshLabels();
-    }, [token])
+        if(props.refresh) {
+            refreshLabels();
+        }
+    })
 
     
     
