@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Alert } from 'react-bootstrap';
 import { API_URL_LABELS_SUFIX, API_URL_PATH } from '../../Util/Constants';
 import './Labels.css';
@@ -23,26 +23,16 @@ async function getLabels(token) {
         })
 }
 
-function convertToArray(labels) {
-    let labelArray = [];
-    for (let i=0; i<labels.length; i++){
-        console.log(labels[i]);
-        labelArray.push(
-            <li key={labels[i].id}><LabelTile label={labels[i]}/></li>
-        )
-    }
-    return labelArray
-}
 
-export default function Labels() {
+
+export default function Labels(props) {
     
     const [ message, setMessage ] = useState();
     const [ labels, setLabels ] = useState();
-    const [ token ] = useState(getToken());
+    const [ token ] = useState(getToken().token);
 
-    useEffect( () => {
-        if(!labels) {
-            getLabels(token.token)
+    const refreshLabels = () => {
+        getLabels(token)
             .then( (response) => {
                 if (response.success) {
                     setLabels(convertToArray(response.message));
@@ -50,8 +40,27 @@ export default function Labels() {
                     setMessage(response.message);
                 }
             })
+    }
+
+    const handleRefresh = () => {
+        props.onRefresh();
+        refreshLabels();
+    }
+
+    const convertToArray = (labels) => {
+        let labelArray = [];
+        for (let i=0; i<labels.length; i++){
+            labelArray.push(
+                <li key={labels[i].id}><LabelTile label={labels[i]} onRefresh={handleRefresh}/></li>
+            )
         }
-    })
+        return labelArray
+    }
+
+
+    useEffect( () => {
+        refreshLabels();
+    }, [token])
 
     
     

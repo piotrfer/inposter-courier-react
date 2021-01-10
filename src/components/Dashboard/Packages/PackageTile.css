@@ -1,12 +1,12 @@
-.label-card {
+.package-card {
     margin: 1vh;
     background-color: lightgoldenrodyellow;
 }
 
-.label-text {
+.package-text {
     margin-bottom: 0.2vh;
 }
 
-.label-footer {
+.package-footer {
     padding: 0 !important;
 }

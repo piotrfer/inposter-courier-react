@@ -14,9 +14,13 @@ export default function Dashboard() {
         return (
             <Redirect to={{
                 pathname: REACT_LOGIN_PATH,
-                state: { message: "You have to be logged in to see this page!" }
+                state: { message: "" }
             }} />
         );
+    }
+
+    const handleRefresh = () => {
+        console.log("refresh!");
     }
 
     return (
@@ -29,7 +33,7 @@ export default function Dashboard() {
             </Row>
             <Row className="text-center">
                 <Col md={{ span : 6 }}>
-                    <Labels />
+                    <Labels onRefresh={handleRefresh} />
                 </Col>
             </Row>
             <Row>
@@ -39,7 +43,7 @@ export default function Dashboard() {
             </Row>
             <Row className="text-center">
                 <Col md={{ span : 6 }}>
-                    <Packages />
+                    <Packages/>
                 </Col>
             </Row>
         </>
