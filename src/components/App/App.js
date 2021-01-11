@@ -5,12 +5,11 @@ import Dashboard from '../Dashboard/Dashboard';
 import Login from '../Login/Login';
 import Register from '../Register/Register'
 import { REACT_DASHBOARD_PATH, REACT_LOGIN_PATH, REACT_REGISTER_PATH } from '../Util/Constants';
-import { Navbar, Nav, Button } from 'react-bootstrap';
-import getToken from './getToken';
+import { Navbar, Nav, Button, Row, Col } from 'react-bootstrap';
 
 const App = () => {
   
-  const [ token, setToken ] = useState(getToken().token)
+  const [ token, setToken ] = useState(localStorage.getItem("token"))
 
   const handleLogout = (event) => {
     localStorage.removeItem("token");
@@ -40,11 +39,16 @@ const App = () => {
                 )
             }}
         />
-          <Route path={REACT_DASHBOARD_PATH} render={(props) => <Dashboard {...props}/>}/>
-          <Route path={REACT_REGISTER_PATH} render={(props) => <Register {...props}/>}/>
+          <Route path={REACT_DASHBOARD_PATH} render={(props) => <Dashboard {...props} token={token} />}/>
+          <Route path={REACT_REGISTER_PATH} render={(props) => <Register {...props} token={token} />}/>
           <Route path={REACT_LOGIN_PATH} render={(props) => <Login {...props} token={token} setToken={setToken} />}/>
         </Switch>
       </BrowserRouter>
+      <Row className="sticky-bottom">
+        <Col>
+          <a href="https://github.com/piotrfer/inposter-courier-react">Github Repository</a>
+        </Col>
+      </Row>
     </> 
   )
 }

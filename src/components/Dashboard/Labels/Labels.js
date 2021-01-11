@@ -3,7 +3,6 @@ import { Container, Alert } from 'react-bootstrap';
 import { API_URL_LABELS_SUFIX, API_URL_PATH } from '../../Util/Constants';
 import './Labels.css';
 import LabelTile from './LabelTile';
-import getToken from '../../App/getToken';
 
 async function getLabels(token) {
     return fetch(API_URL_PATH+API_URL_LABELS_SUFIX, {
@@ -29,10 +28,9 @@ export default function Labels(props) {
     
     const [ message, setMessage ] = useState();
     const [ labels, setLabels ] = useState();
-    const [ token ] = useState(getToken().token);
 
     const refreshLabels = () => {
-        getLabels(token)
+        getLabels(props.token)
             .then( (response) => {
                 if (response.success) {
                     setLabels(convertToArray(response.message));
@@ -52,7 +50,7 @@ export default function Labels(props) {
         let labelArray = [];
         for (let i=0; i<labels.length; i++){
             labelArray.push(
-                <li key={labels[i].id}><LabelTile label={labels[i]} onRefresh={handleRefresh}/></li>
+                <li key={labels[i].id}><LabelTile token={props.token} label={labels[i]} onRefresh={handleRefresh}/></li>
             )
         }
         return labelArray

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Alert } from 'react-bootstrap';
-import getToken from '../../App/getToken';
 import { API_URL_PATH, API_URL_PACKAGES_SUFIX } from '../../Util/Constants';
 import PackageTile from './PackageTile';
 import './Packages.css'
@@ -37,12 +36,11 @@ function convertToArray(packages) {
 
 export default function Packages(props) {
     
-    const [ token ] = useState(getToken().token);
     const [ message, setMessage ] = useState();
     const [ packages, setPackages ] = useState();
 
     const refreshPackages = () => {
-        getPackages(token)
+        getPackages(props.token)
             .then( (response) => {
                 if (response.success) {
                     setPackages(convertToArray(response.message));

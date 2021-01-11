@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import getToken from '../../App/getToken';
 import { API_URL_PACKAGES_SUFIX, API_URL_PATH } from '../../Util/Constants';
 
 async function generatePackage(label, token) {
@@ -28,10 +27,8 @@ async function generatePackage(label, token) {
 
 export default function CreatePackage(props) {
     
-    const [ token ] = useState(getToken().token);
-
     const handleSave = () => {
-        generatePackage(props.labelId, token)
+        generatePackage(props.labelId, props.token)
             .then( (response) => {
                 if(response.success){
 

@@ -7,10 +7,8 @@ export default function LabelTile(props) {
     
     const [ show, setShow ] = useState();
 
-    const handleClick = (event) => {
-        console.log(props.label.sent)
+    const handleClick = () => {
         setShow(true);
-        console.log(show);
     }
 
     const handleHide = () => {
@@ -36,7 +34,7 @@ export default function LabelTile(props) {
                     }
                 </Card.Footer>
             </Card>
-            <CreatePackage show={show} labelId={props.label.id} onModalHide={handleHide}/>
+            <CreatePackage token={props.token} show={show} labelId={props.label.id} onModalHide={handleHide}/>
         </Container>
     );
 }

@@ -4,7 +4,6 @@ import { CustomLink } from '../CustomLink/CustomLink';
 import { Container, Form, FormControl, Button, Alert, Row, Col } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import './Register.css';
-import getToken from '../App/getToken';
 
 async function registerCourier(credentials) {
     return fetch(API_URL_PATH+API_URL_REGISTER_SUFIX, {
@@ -54,7 +53,7 @@ function validate(credentials) {
     return true;
 }
 
-export default function Register() {
+export default function Register(props) {
     
     const [ message, setMessage ] = useState();
     const [ firstname, setFirstname ] = useState();
@@ -64,7 +63,6 @@ export default function Register() {
     const [ password, setPassword ] = useState();
     const [ repassword, setRepassword ] = useState();
     const [ licence, setLicence ] = useState();
-    const [ token ] = useState(getToken().token);
     const [ registered, setRegistered ] = useState(false);
 
     const handleSubmit = async e => {
@@ -100,7 +98,7 @@ export default function Register() {
         }
     }
 
-    if (token)  {
+    if (props.token)  {
         return (
             <Redirect to={{
                 pathname : REACT_DASHBOARD_PATH,

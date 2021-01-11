@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import getToken from '../App/getToken';
 import { REACT_LOGIN_PATH } from '../Util/Constants';
 import Packages from './Packages/Packages';
 import Labels from './Labels/Labels';
 import { Row, Col } from 'react-bootstrap';
 
-export default function Dashboard() {
+export default function Dashboard(props) {
 
-    const token = getToken().token;
     const [ packageRefresh, setPackageRefresh ] = useState(true);
     const [ labelRefresh, setLabelRefresh ] = useState(true);
 
-    if (!token) {
+    if (!props.token) {
         return (
             <Redirect to={{
                 pathname: REACT_LOGIN_PATH,
@@ -35,7 +33,7 @@ export default function Dashboard() {
             </Row>
             <Row className="text-center">
                 <Col md={{ span : 6 }}>
-                    <Labels onRefresh={handleRefresh} refresh={labelRefresh} setRefresh={setLabelRefresh}/>
+                    <Labels token={props.token} onRefresh={handleRefresh} refresh={labelRefresh} setRefresh={setLabelRefresh}/>
                 </Col>
             </Row>
             <Row>
@@ -45,7 +43,7 @@ export default function Dashboard() {
             </Row>
             <Row className="text-center">
                 <Col md={{ span : 6 }}>
-                    <Packages refresh={packageRefresh} setRefresh={setPackageRefresh} />
+                    <Packages token={props.token} refresh={packageRefresh} setRefresh={setPackageRefresh} />
                 </Col>
             </Row>
         </>
