@@ -22,11 +22,11 @@ async function getPackages(token) {
         })
 }
 
-function convertToArray(packages) {
+function convertToArray(packages, refreshFunction, token) {
     let packageArray = [];
     for (let i=0; i<packages.length; i++){
         packageArray.push(
-            <li key={packages[i].id}><PackageTile package={packages[i]}/></li>
+            <li key={packages[i].id}><PackageTile token={token} package={packages[i]} setRefresh={refreshFunction} /></li>
         )
     }
     return packageArray
@@ -43,7 +43,7 @@ export default function Packages(props) {
         getPackages(props.token)
             .then( (response) => {
                 if (response.success) {
-                    setPackages(convertToArray(response.message));
+                    setPackages(convertToArray(response.message, props.setRefresh, props.token));
                 } else {
                     setMessage(response.message);
                 }                    

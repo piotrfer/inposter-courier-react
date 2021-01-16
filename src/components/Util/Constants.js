@@ -3,6 +3,7 @@ export const API_URL_LOGIN_SUFIX ='/courier/login';
 export const API_URL_REGISTER_SUFIX ='/courier/signup';
 export const API_URL_LABELS_SUFIX = '/labels/list';
 export const API_URL_PACKAGES_SUFIX = '/parcels/list'
+export const API_URL_SINGLE_PACKAGE_SUFIX = '/parcels';
 export const REACT_LOGIN_PATH = '/login';
 export const REACT_REGISTER_PATH = '/register';
 export const REACT_DASHBOARD_PATH = '/dashboard';

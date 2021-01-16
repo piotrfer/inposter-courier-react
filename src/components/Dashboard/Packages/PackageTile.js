@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './PackageTile.css'
 import { Container, Card, Button} from 'react-bootstrap';
+import UpdatePackage from './UpdatePackage';
 
+
+    
 export default function PackageTile(props) {
     
-    const handleClick = () => {
+    const [ show, setShow ] = useState(false);
 
+    const handleClick = () => {
+        setShow(true);
+    }
+
+    const handleHide = () => {
+        setShow(false);
+        props.setRefresh(true);
     }
 
     const received = (new Date(props.package.received*1000)).toLocaleDateString("pl-Pl",
@@ -23,6 +33,7 @@ export default function PackageTile(props) {
                 <Card.Footer className="package-footer">
                     <Button as="input" type="button" variant="outline-success" onClick={handleClick} value="Change Status" size="md" block/>
                 </Card.Footer>
+                <UpdatePackage token={props.token} show={show} packageId={props.package.id} onModalHide={handleHide}/>
             </Card>
         </Container>
     );
