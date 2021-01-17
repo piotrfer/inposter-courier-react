@@ -4,6 +4,7 @@ import {CustomLink} from '../CustomLink/CustomLink';
 import './Login.css';
 import { API_URL_PATH, API_URL_LOGIN_SUFIX, REACT_DASHBOARD_PATH } from '../Util/Constants';
 import { Container, Form, FormControl, Button, Alert, Row, Col } from 'react-bootstrap';
+import { useAuth0 } from "@auth0/auth0-react";
 
 async function loginCourier(credentials) {
     return fetch(API_URL_PATH+API_URL_LOGIN_SUFIX, {
@@ -27,6 +28,15 @@ export default function Login(props) {
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
     const [message, setMessage ] = useState();
+    const { user, isAuthenticated, getAccessTokenWithPopup } = useAuth0();
+
+    const handleLoginAuth0 = () => {
+        console.log(user);
+        getAccessTokenWithPopup()
+            .then(response => response.json())
+            .then(data => console.log(data))
+
+    }
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -70,6 +80,7 @@ export default function Login(props) {
                         <FormControl onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" className="input-form"/> 
                         <Button as="input" type="submit" value="Submit" />
                         <CustomLink to="/register" text="Don't have an account? Register now!"/>
+                        <Button as="input" type="button" value="Log In With Auth0" onClick={handleLoginAuth0} />
                     </Form>
                 </Col>
             </Row>
